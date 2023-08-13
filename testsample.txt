@@ -8,7 +8,7 @@ git brench brenchname  #brenchname填上我們想要新增的brenchname
 
 git checkout brenchname   #brenchname填上我們的brenchname
 
-git branch  #找出要的brench，確認沒有連錯brench
+git branch  #找出要的brench，確認沒有連錯branch # 按q退出
 
 git status #它會秀出你新增的（或修改）的東西
 
