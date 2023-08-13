@@ -18,5 +18,5 @@ git commit -m "add aaaa"  #"add aaaa" 這邊可以填入你這次更動的說明
 
 ＃git add * #如果你一次動到太多檔案可以直接用這個code
 
-git push  #將你更改玩的東西上傳
+git push  #將你更改完的東西上傳
 
