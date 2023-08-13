@@ -1,1 +1,22 @@
-aaaabbb
+#＃＃ github 合併程式筆記
+
+#git clone mylink  #mylink等於我連結，這樣就能直接連到我的github
+
+#git pull brenchname  #brenchname填上我們想要的brenchname，pull 則是如果你的夥伴有更改併上傳，則可以使用pull將更改的資料抓下來
+
+git brench brenchname  #brenchname填上我們想要新增的brenchname
+
+git checkout brenchname   #brenchname填上我們的brenchname
+
+git branch  #找出要的brench，確認沒有連錯branch # 按q退出
+
+git status #它會秀出你新增的（或修改）的東西
+
+git add testsample.txt #testsample.txt這邊則是你剛剛改過的當按名稱
+
+git commit -m "add aaaa"  #"add aaaa" 這邊可以填入你這次更動的說明
+
+＃git add * #如果你一次動到太多檔案可以直接用這個code
+
+git push  #將你更改玩的東西上傳
+
