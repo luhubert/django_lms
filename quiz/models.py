@@ -466,5 +466,3 @@ class Essay_Question(Question):
     class Meta:
         verbose_name = _("問答題")
         verbose_name_plural = _("問答題")
-
-

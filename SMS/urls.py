@@ -14,7 +14,8 @@ urlpatterns = [
     path('quiz/', include('quiz.urls')),
 
     path('payments/', include('payments.urls')),
-
+    path('self_regulated_dashboard/', include('self_regulated_dashboard.urls')),
+    path('co_regulated_dashboard/', include('co_regulated_dashboard.urls')),
     path('accounts/api/', include('accounts.api.urls', namespace='accounts-api')),
 
     path('admin/', admin.site.urls),
