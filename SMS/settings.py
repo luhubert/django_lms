@@ -29,7 +29,7 @@ SECRET_KEY = 'o!ld8nrt4vc*h1zoey*wj48x*q0#ss12h=+zh)kk^6b3aygg=!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['140.115.126.56']
 
 # change the default user models to our custom model
 AUTH_USER_MODEL = 'accounts.User' 
@@ -62,10 +62,15 @@ PROJECT_APPS = [
     'search.apps.SearchConfig',
     'quiz.apps.QuizConfig',
     'payments.apps.PaymentsConfig',
+    'self_regulated_dashboard.apps.SelfRegulatedDashboardConfig',
+    'co_regulated_dashboard.apps.CoRegulatedDashboardConfig'
+
+  #  'user_log.apps.UserLogConfig'
+    
 ]
 
 # Combine all apps
-INSTALLED_APPS = DJANGO_APPS + THIRED_PARTY_APPS + PROJECT_APPS
+INSTALLED_APPS = DJANGO_APPS + THIRED_PARTY_APPS + PROJECT_APPS 
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -90,6 +95,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                
                 
                 # 'django.template.context_processors.i18n',
                 # 'django.template.context_processors.media',

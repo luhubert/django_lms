@@ -291,4 +291,3 @@ def dashboard_view(request):
 
 def tableau_report(request):
     return render(request, 'app/tableau.html')
-
