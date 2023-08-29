@@ -2,14 +2,14 @@
 
 {% block content %}
 
-<div id="input-nav"><a href="{% url 'home' %}" class="primary1">Home</a> <i>&rsaquo;</i> 
-    <a href="{% url 'programs' %}" class="primary1"> Programs</a> <i>&rsaquo;</i> 
+<div id="input-nav"><a href="{% url 'home' %}" class="primary1">首頁</a> <i>&rsaquo;</i> 
+    <a href="{% url 'programs' %}" class="primary1">課程</a> <i>&rsaquo;</i> 
     <a href="{% url 'program_detail' course.program.id %}" class="primary1"> {{ course.program }}</a> <i>&rsaquo;</i> 
     <a href="{{ course.get_absolute_url }}" class="primary1">{{ course }}</a> <i>&rsaquo;</i> 
-    <a href="{% url 'quiz_index' course.slug %}" class="primary1">Quizzes</a> <i>&rsaquo;</i> Add Quiz</div>
+    <a href="{% url 'quiz_index' course.slug %}" class="primary1">測驗</a> <i>&rsaquo;</i> 新增測驗</div>
 
 <div class="container">
-    <div class="header-title-xl text-center">Quiz form for {{ course }}</div>
+    <div class="header-title-xl text-center">為 {{ course }} 創建測驗表單</div>
     <div class="title-line mb-5"></div>
 
     <!-- <form method="POST" action="">{% csrf_token %}
@@ -121,16 +121,15 @@
                     <div class="form-group">
                         <label for="pass_mark">{{ form.pass_mark.label }}</label>
                         {{ form.pass_mark }}
-                        <!-- <input class="form-control" type="number" name="pass_mark" value="50" id="id_pass_mark"> -->
                         <span class="danger">{{ form.pass_mark.errors }}</span>
-                        <small class="d-block text-muted">Percentage required to pass exam.</small>
+                        <small class="d-block text-muted">通過考試所需的百分比。</small>
                     </div>
                     <div class="form-group">
                         <label for="description">{{ form.description.label }}</label><br>
                         {{ form.description }}
                         <!-- <textarea name="description" class="form-control" id="id_description"></textarea> -->
                         <span class="danger">{{ form.description.errors }}</span>
-                        <small class="d-block text-muted">a description of the quiz</small>
+                        <small class="d-block text-muted"></small>
                     </div>
                 <!-- </div> -->
                 </div>
@@ -183,7 +182,7 @@
             </div>
         </div>
         <center>
-            <button class="btn btn-lg btn-primary my-4" id="{% if form.is_valid %}btn-transition{% endif %}" type="submit">Save & Continue</button>
+            <button class="btn btn-lg btn-primary my-4" id="{% if form.is_valid %}btn-transition{% endif %}" type="submit">保存並繼續</button>
         </center>
     </form>
 </div>

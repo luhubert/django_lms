@@ -5,6 +5,29 @@
 		background-size: cover;
 		background-position: top center;
 	}
+	/* .custom-dropdown-toggle {
+		background-color: white;
+	}
+
+	.custom-dropdown-toggle:hover { */
+		/* background-color: blue; */
+		/*color: white;  如果需要，可以將滑過文字顏色設為白色 */
+	/* } */
+
+	/* .custom-dropdown-item {
+		background-color: white;
+	} */
+
+	/* .custom-dropdown-item:hover {
+		background-color: blue; */
+		/*color: white;  如果需要，可以將滑過文字顏色設為白色 */
+	/* } */
+
+	/* .custom-dropdown-item.active {
+		background-color: blue; */
+		/*color: white;  如果需要，可以將選取的文字顏色設為白色 */
+	/* } */
+
 </style>
 
 <div id="side-nav">
@@ -30,7 +53,10 @@
 		{% url 'add_score' as ascore %} {% url 'grade_results' as vr %}{% url 'ass_results' as ar %}
 		{% url 'course_registration' as cr %} {% url 'edit_profile' as ep %} {% url 'change_password' as cp %}
 		{% url 'quiz_progress' as qpr %} {% url 'quiz_marking' as qce %} {% url 'user_course_list' as ucl %}
-		{% url 'admin_panel' as admin_p %}
+		{% url 'admin_panel' as admin_p %} {% url 'self_regulated_dashboard' as self_regulated %} 
+		{% url 'co_regulated_dashboard' as co_regulated %}
+		
+		
 		<ul>
 			{% if request.user.is_superuser %}
 			<!-- <li class="{% if request.path == dash %}active{% endif %}">
@@ -43,9 +69,17 @@
 			<!-- <li class="{% if request.path == prof %}active{% endif %}">
 				<a href="{% url 'profile' %}"><i class="fas fa-user"></i>個人資料</a>
 			</li> -->
-			<li class="{% if request.path == dash %}active{% endif %}">
-				<a href="{% url 'dashboard' %}"><i class="fas fa-tachometer-alt"></i>儀表板</a>
+			<li class="nav-item dropdown {% if request.path == dash or request.path == self_regulated or request.path == collaborative %}active{% endif %}">
+				<a class="nav-link dropdown-toggle custom-dropdown-toggle" href="#" id="dashboardDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<i class="fas fa-tachometer-alt"></i>儀表板
+				</a>
+				<div class="dropdown-menu custom-dropdown-menu" aria-labelledby="dashboardDropdown">
+					<a class="dropdown-item custom-dropdown-item {% if request.path == self_regulated %}active{% endif %}" href="{% url 'self_regulated_dashboard' %}">自我調節學習分析儀表板</a>
+					<a class="dropdown-item custom-dropdown-item {% if request.path == co_regulated %}active{% endif %}" href="{% url 'co_regulated_dashboard' %}">共同調節學習分析儀表板</a>
+				</div>
 			</li>
+			
+			
 
 			{% if request.user.is_superuser %}
 			<li class="{% if request.path == admin_p %}active{% endif %}">
@@ -64,6 +98,7 @@
 				<a href="{% url 'user_course_list' %}"><i class="fas fa-book"></i>我的課程</a>
 			</li>
 			{% endif %}
+
 
 			{% if request.user.is_superuser or request.user.is_lecturer %}
 			<li class="{% if request.path == qce %}active{% endif %}">
@@ -85,10 +120,6 @@
 				<a href="{% url 'semester_list' %}"><i class="fas fa-calendar-alt"></i>管理學期</a>
 			</li> -->
 			{% endif %}
-			
-			<li>
-				<a href="{% url 'upload_questions' %}"><i class="fas fa-upload"></i>上傳題庫</a>
-			</li>
 
 			{% if request.user.is_lecturer %}
 			<li class="{% if request.path == ascore %}active{% endif %}">

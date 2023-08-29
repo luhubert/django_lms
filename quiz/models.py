@@ -60,16 +60,16 @@ class Quiz(models.Model):
         help_text=_("問題後不顯示正確答案。答案在最後顯示。"))
 
     exam_paper = models.BooleanField(blank=False, default=False, verbose_name=_("考試卷"),
-        help_text=_("如果是，則每個用戶的每次嘗試的結果將被存儲。需要打分。"))
+        help_text=_("如果是，則每個使用者的每次嘗試的結果將被存儲。需要打分。"))
 
     single_attempt = models.BooleanField(blank=False, default=False, verbose_name=_("單次嘗試"), 
-        help_text=_("如果是，則只允許用戶嘗試一次。"))
+        help_text=_("如果是，則只允許使用者嘗試一次。"))
 
     pass_mark = models.SmallIntegerField(blank=True, default=50, verbose_name=_("及格分數"), validators=[MaxValueValidator(100)], 
         help_text=_("通過考試所需的百分比。"))
 
     draft = models.BooleanField(blank=True, default=False, verbose_name=_("草稿"),
-        help_text=_("如果是，則測驗不會在測驗列表中顯示，只能由可以編輯測驗的用戶進行。"))
+        help_text=_("如果是，則測驗不會在測驗列表中顯示，只能由可以編輯測驗的使用者進行。"))
 
     timestamp = models.DateTimeField(auto_now=True)
 
@@ -122,14 +122,14 @@ class ProgressManager(models.Manager):
 
 # 進度類別
 class Progress(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, verbose_name=_("用戶"), on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, verbose_name=_("使用者"), on_delete=models.CASCADE)
     score = models.CharField(max_length=1024, verbose_name=_("分數"), validators=[validate_comma_separated_integer_list])
 
     objects = ProgressManager()
 
     class Meta:
-        verbose_name = _("用戶進度")
-        verbose_name_plural = _("用戶進度記錄")
+        verbose_name = _("使用者進度")
+        verbose_name_plural = _("使用者進度記錄")
 
     # @property
     def list_all_cat_scores(self):
@@ -214,9 +214,9 @@ class SittingManager(models.Manager):
 
 # 坐下類別
 class Sitting(models.Model):
-    user_answers_correct = models.TextField(blank=True, default='{}', verbose_name=_("用戶答案是否正確"))  # 添加用戶答案是否正確的欄位
+    user_answers_correct = models.TextField(blank=True, default='{}', verbose_name=_("使用者答案是否正確"))  # 添加使用者答案是否正確的欄位
     # 原有的其他欄位
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("用戶"), on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("使用者"), on_delete=models.CASCADE)
     quiz = models.ForeignKey(Quiz, verbose_name=_("測驗"), on_delete=models.CASCADE)
     course = models.ForeignKey(Course, null=True, verbose_name=_("課程"), on_delete=models.CASCADE)
 
@@ -228,10 +228,11 @@ class Sitting(models.Model):
 
     incorrect_questions = models.CharField(max_length=1024, blank=True, verbose_name=_("不正確的問題"),
         validators=[validate_comma_separated_integer_list])
-
+    correct_answers = models.IntegerField(default=0) # 添加正確答案的欄位
+    incorrect_answers = models.IntegerField(default=0) # 添加錯誤答案的欄位
     current_score = models.IntegerField(verbose_name=_("當前分數"))
     complete = models.BooleanField(default=False, blank=False, verbose_name=_("完成"))
-    user_answers = models.TextField(blank=True, default='{}', verbose_name=_("用戶答案"))
+    user_answers = models.TextField(blank=True, default='{}', verbose_name=_("使用者答案"))
     start = models.DateTimeField(auto_now_add=True, verbose_name=_("開始"))
     end = models.DateTimeField(null=True, blank=True, verbose_name=_("結束"))
 
@@ -385,19 +386,23 @@ class Question(models.Model):
 
 #選擇題
 class MCQuestion(Question):
-
+    
     choice_order = models.CharField(
         max_length=30, null=True, blank=True,
         choices=CHOICE_ORDER_OPTIONS,
         help_text=_("選擇題選項對使用者顯示的順序"),
         verbose_name=_("選項順序"))
 
-    def check_if_correct(self, guess):
+    def check_if_correct(self, guess): #,sitting_instance
         answer = Choice.objects.get(id=guess)
-        correct = answer.correct is True
-        # 儲存用戶的答案和答案是否正確
-        Sitting.objects.filter(user=self.user, quiz=self.quiz, complete=False).update_user_answer(self, guess, correct)
-        return correct
+        if answer.correct is True:
+            # sitting_instance.correct_answers += f"{guess},"
+            # sitting_instance.save()
+            return True
+        else:
+            # sitting_instance.incorrect_answers += f"{guess},"
+            # sitting_instance.save()
+            return False
     
     
     def order_choices(self, queryset):
@@ -426,7 +431,7 @@ class MCQuestion(Question):
 
 class Choice(models.Model):
     question = models.ForeignKey(MCQuestion, verbose_name=_("問題"), on_delete=models.CASCADE)
-
+    
     choice = models.CharField(max_length=1000, blank=False,
         help_text=_("輸入你想要顯示的選項文字"), 
         verbose_name=_("內容"))
@@ -446,7 +451,7 @@ class Choice(models.Model):
 class Essay_Question(Question):
 
     def check_if_correct(self, guess):
-        # 儲存用戶的答案，由於問答題無法自動判斷答案是否正確，所以此處暫時將答案是否正確設為False
+        # 儲存使用者的答案，由於問答題無法自動判斷答案是否正確，所以此處暫時將答案是否正確設為False
         Sitting.objects.filter(user=self.user, quiz=self.quiz, complete=False).update_user_answer(self, guess, False)
 
         return False
@@ -466,5 +471,3 @@ class Essay_Question(Question):
     class Meta:
         verbose_name = _("問答題")
         verbose_name_plural = _("問答題")
-
-

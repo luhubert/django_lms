@@ -279,9 +279,11 @@ class QuizTake(FormView):
         if is_correct is True:
             self.sitting.add_to_score(1)
             progress.update_score(self.question, 1, 1)
+            self.sitting.correct_answers += 1
         else:
             self.sitting.add_incorrect_question(self.question)
             progress.update_score(self.question, 0, 1)
+            self.sitting.incorrect_answers += 1
 
         if self.quiz.answers_at_end is not True:
             self.previous = {
@@ -296,6 +298,7 @@ class QuizTake(FormView):
 
         self.sitting.add_user_answer(self.question, guess)
         self.sitting.remove_first_question()
+        self.sitting.save()
 
     def final_result_user(self):
         results = {
@@ -319,40 +322,3 @@ class QuizTake(FormView):
             self.sitting.delete()
 
         return render(self.request, self.result_template_name, results)
-
-
-def upload_questions(request):
-
-    def handle_uploaded_file(f):
-
-        lines = f.readlines()
-        i = 0
-        while i < len(lines):
-            line = lines[i].strip()
-            # Check if the line starts with a number followed by a dot (indicating the start of a question)
-            if line.split('.')[0].isdigit():
-                question_text = line.split('.', 1)[1].strip()
-                options = []
-                i += 1
-                # Collect options until we find the "Answer:" line
-                while not lines[i].startswith("Answer:"):
-                    options.append(lines[i].strip())
-                    i += 1
-                answer = lines[i].split(':', 1)[1].strip()
-            # Store the question, options, and answer in the database
-            # For this example, I'm just printing them out
-                print("Question:", question_text)
-                print("Options:", options)
-                print("Answer:", answer)
-            i += 1
-
-
-    if request.method == 'POST':
-        form = QuestionUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            # handle_uploaded_file(request.FILES['file'])
-            
-            return render(request, 'upload.html', {'form': form})
-    else:
-        form = QuestionUploadForm()
-    return render(request, 'upload.html', {'form': form})

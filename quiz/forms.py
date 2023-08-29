@@ -3,7 +3,6 @@ from django.forms.widgets import RadioSelect, Textarea
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.utils.translation import gettext_lazy as _
 from django.db import transaction
-from django.core.validators import FileExtensionValidator
 
 from django.forms.models import inlineformset_factory
 
@@ -62,6 +61,3 @@ class MCQuestionForm(forms.ModelForm):
 MCQuestionFormSet = inlineformset_factory(
     MCQuestion, Choice, form=MCQuestionForm, fields=['choice', 'correct'], can_delete=True, extra=5
 )
-
-class QuestionUploadForm(forms.Form):
-    file = forms.FileField(validators=[FileExtensionValidator(['txt', 'csv'])])
